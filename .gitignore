@@ -1,0 +1,29 @@
+# Ignore OpenFOAM time directories (Results)
+[1-9]*
+0.*
+-0.*
+
+# Ignore Mesh Data
+constant/polyMesh/
+constant/extendedFeatureEdgeMesh/
+constant/triSurface/*.eMesh
+
+# Ignore Log files
+log.*
+*.log
+
+# Ignore Post-Processing and Visualization
+VTK/
+postProcessing/
+probes/
+forces/
+*.foam
+
+# Ignore OS specific files
+.DS_Store
+Thumbs.db
+
+# Optional: Ignore massive CAD files if they exceed 50MB (GitHub limit is 100MB)
+# If your Ahmed body or F1 wing STLs are small (<10MB), you can track them. 
+# If they are huge, uncomment the line below and store CAD elsewhere.
+# constant/triSurface/*.stl 
