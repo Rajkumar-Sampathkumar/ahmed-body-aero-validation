@@ -71,13 +71,20 @@ boundary
             (4 5 6 7)
         );
     }
-    sides
+    farSide
     {
         type symmetry;
         faces
         (
-            (0 1 5 4)
             (3 7 6 2)
+        );
+    }
+    centerline
+    {
+        type symmetryPlane;
+        faces
+        (
+            (0 1 5 4)
         );
     }
 );
