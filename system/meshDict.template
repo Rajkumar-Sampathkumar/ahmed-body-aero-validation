@@ -13,36 +13,44 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Tell cfMesh which geometry to carve out
-surfaceFile     "ahmed_body_half.stl"
+// ========================================================================= //
+// 1. BASE DOMAIN (THE WIND TUNNEL)
+// ========================================================================= //
+surfaceFile "constant/triSurface/domain.stl";
+maxCellSize 0.4;
+
+// Tell cfMesh to keep the cells touching the inlet. 
+// This forces it to mesh the air volume and hollow out the car.
+keepCellsIntersectingPatches
+(
+    "inlet"
+);
 
 // ========================================================================= //
-// PILLAR 1: GLOBAL SCALE
+// 2. SECONDARY SURFACE (THE CAR)
 // ========================================================================= //
-// This is the maximum cell size (in meters) in the far-field wind tunnel.
-// Since our domain is massive (15 meters long), we can let these cells be large 
-// to save memory.
-maxCellSize  0.4;
-
-// ========================================================================= //
-// PILLAR 2: SURFACE REFINEMENT
-// ========================================================================= //
-// This dictates the baseline cell size directly on the car's surface. 
-// We are setting it to 20mm (0.02m) here.
-boundaryCellSize  0.02; 
-
-// We tell cfMesh to look specifically at the car and refine sharp edges 
-// even further so we don't lose the 25-degree slant angle.
-localRefinement
+surfaceMeshRefinement 
 {
-    "ahmed_body_half.stl"
+    ahmed_body
     {
-        additionalRefinementLevels  1; // Halves the boundary cell size to 10 mm
+        surfaceFile "constant/triSurface/ahmed_body_half.stl"
+        cellSize 0.02;
+        additionalRefinementLevels 1;
     }
 }
 
+// We tell cfMesh to look specifically at the car and refine sharp edges 
+// even further so we don't lose the 25-degree slant angle.
+// localRefinement
+// {
+    // "ahmed_body_half*"
+    // {
+        // additionalRefinementLevels 1; // Halves the boundary cell size to 10 mm
+    // }
+// }
+
 // ========================================================================= //
-// PILLAR 3: VOLUME REFINEMENT (THE WAKE)
+// 3. WAKE REFINEMENT
 // ========================================================================= //
 // 
 // We create an invisible bounding box behind the car. 
@@ -55,21 +63,23 @@ objectRefinements
         type box;
         // NOTE: These coordinates assume your car's rear base is near X = 1.0.
         // It draws a box starting near the rear window, extending 3 meters back.
-        pMin  (0.8 0.0 0.0)
-        pMax  (4.0 0.6 0.6)
-        cellSize  0.04; // 40mm cells in the wake
+        centre (2.4 0.3 0.3);
+        lengthX 3.2;
+        lengthY 0.6;
+        lengthZ 0.6;
+        cellSize 0.04; // 40mm cells in the wake
     }
 }
 
 // ========================================================================= //
-// PILLAR 4: BOUNDARY LAYERS (PYTHON HOOK)
+// 4: BOUNDARY LAYERS (PYTHON HOOK)
 // ========================================================================= //
 // We only want layers on the car. We absolutely DO NOT want layers on the 
 // symmetry plane or the wind tunnel walls.
 boundaryLayers
 {
     // By default, turn layers OFF everywhere
-    nLayers  0;
+    nLayers 0;
 
     patchBoundaryLayers
     {
@@ -82,7 +92,55 @@ boundaryLayers
             // This is the exact placeholder where the python script looks for
             maxFirstLayerThickness _FIRST_LAYER_THICKNESS_;
 
-            allowPointsOnMultipleMacroEdges  0; // Prevents layer collapse on sharp corners
+            allowPointsOnMultipleMacroEdges 0; // Prevents layer collapse on sharp corners
+        }
+    }
+}
+
+// ========================================================================= //
+// 5. PATCH CLEANUP
+// ========================================================================= //
+renameBounday
+{
+    defaultName     defaultFaces;
+    defaultType     patch;
+
+    newPatchNames
+    {
+        "ahmed_body_half.stl"
+        {
+            newName     ahmed_body;
+            type        wall;
+        }
+        "inlet"
+        {
+            newName     inlet;
+            type        patch;
+        }
+        "outlet"
+        {
+            newName     outlet;
+            type        patch;
+        }
+        "ground"
+        {
+            newName     ground;
+            type        wall;
+        }
+        "roof"
+        {
+            newName     roof;
+            type        symmetry;
+        }
+        "farSide"
+        {
+            newName     farSide;
+            type        symmetry;
+        }
+        "centerline"
+        {
+            newName     centerline;
+            type        symmetryPlane;
         }
     }
 }
