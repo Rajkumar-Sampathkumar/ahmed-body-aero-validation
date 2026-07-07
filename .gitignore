@@ -27,3 +27,10 @@ Thumbs.db
 # If your Ahmed body or F1 wing STLs are small (<10MB), you can track them. 
 # If they are huge, uncomment the line below and store CAD elsewhere.
 # constant/triSurface/*.stl system/meshDict
+# OpenFOAM Specific Ignores
+[1-9]*
+processor*
+postProcessing/
+constant/polyMesh/*
+!constant/polyMesh/blockMeshDict
+*.obj

@@ -1,4 +1,4 @@
-solid ahmed_body_half(Meshed)
+solid ahmed_body_half
  facet normal 0.999991 0.00431282 0
   outer loop
    vertex 0.216999 0.163631 0.05
@@ -51827,4 +51827,4 @@ solid ahmed_body_half(Meshed)
    vertex 0.0996495 0.194499 0.337999
   endloop
  endfacet
-endsolid ahmed_body_half(Meshed)
+endsolid ahmed_body_half
