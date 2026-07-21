@@ -263,7 +263,7 @@ addLayersControls
         }
 
     }
-    thicknessModel firstAndExpansionRatio;
+    thicknessModel firstAndExpansion;
 
     firstLayerThickness @FIRST_LAYER_THICKNESS@;
 
