@@ -26,11 +26,11 @@ def main ():
 
     # NEW: Mesh Control Inputs
     parser.add_argument("-nl", "--num_layers", type=int, default=10, help="Total number of prism layers")
-    parser.add_argument("-tr", "--thickness_ratio", type=float, default=1.2, help="Layer expansion ratio")
+    parser.add_argument("-er", "--expansion_ratio", type=float, default=1.2, help="Layer expansion ratio")
 
     # File paths
-    parser.add_argument("-t", "--template", type=str, default="system/meshDict.template", help="Path to template file")
-    parser.add_argument("-o", "--output", type=str, default="system/meshDict", help="Path to output file")
+    parser.add_argument("-t", "--template", type=str, default="system/snappyHexMeshDict.template", help="Path to template file")
+    parser.add_argument("-o", "--output", type=str, default="system/snappyHexMeshDict", help="Path to output file")
 
     args = parser.parse_args()
 
@@ -42,7 +42,7 @@ def main ():
     print(f"Target y+:          {args.yplus}")
     print(f"First Layer (m):    {y_height_m:.6e}")
     print(f"Number of Layers:   {args.num_layers}")
-    print(f"Thickness Ratio:    {args.thickness_ratio}")
+    print(f"Expansion Ratio:    {args.expansion_ratio}")
 
     # 2. Inject into the dictionary template
     if not os.path.exists(args.template):
@@ -54,14 +54,14 @@ def main ():
             file_data = file.read()
 
         # Perform the text replacements
-        new_data = file_data.replace("_FIRST_LAYER_THICKNESS_", f"{y_height_m:.6e}")
-        new_data = new_data.replace("_NUM_LAYERS_", str(args.num_layers))
-        new_data = new_data.replace("_THICKNESS_RATIO_", str(args.thickness_ratio))
+        new_data = file_data.replace("@FIRST_LAYER_THICKNESS@", f"{y_height_m:.6e}")
+        new_data = new_data.replace("@NUM_LAYERS@", str(args.num_layers))
+        new_data = new_data.replace("@EXPANSION_RATIO@", str(args.expansion_ratio))
 
         with open(args.output, 'w') as file:
             file.write(new_data)
 
-        print(f"Success: Final meshDict generated at {args.output}")
+        print(f"Success: Final snappyHexMeshDict generated at {args.output}")
 
     except Exception as e:
         print(f"Error processing files: {e}", file=sys.stderr)
