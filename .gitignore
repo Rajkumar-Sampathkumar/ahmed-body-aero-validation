@@ -34,3 +34,4 @@ postProcessing/
 constant/polyMesh/*
 !constant/polyMesh/blockMeshDict
 *.obj
+system/snappyHexMeshDict
