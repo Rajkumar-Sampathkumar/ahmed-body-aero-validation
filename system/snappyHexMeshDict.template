@@ -24,9 +24,9 @@ W 0.194; // Reference Half-Width
 H 0.288; // Reference Height
 
 // 2. Target Refinement Levels
-lvlInner 3;
-lvlOuter 2;
-lvlCar   4;
+lvlInner 5;
+lvlOuter 4;
+lvlCar   7;
 
 // 3. Wake Box Scaling Equations
 // Inner Wake: Starts 80% down the car, ends 1.5 car lengths behind
