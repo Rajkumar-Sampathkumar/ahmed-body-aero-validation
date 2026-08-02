@@ -9,53 +9,57 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    object      fvSchemes;
+    class       volVectorField;
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-ddtSchemes
+
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (40 0 0);
+
+boundaryField
 {
-    default         steadyState;
-}
+    inlet
+    {
+        type            fixedValue;
+        value           uniform (40 0 0);
+    }
 
-gradSchemes
-{
-    default         cellLimited Gauss linear 1;
-    grad(U)         cellLimited Gauss linear 1;
-}
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform (0 0 0);
+        value           $internalField;
+    }
 
-divSchemes
-{
-    default         none;
+    ground
+    {
+        type            noSlip;
+    }
 
-    div(phi,U)      bounded Gauss linearUpwindV grad(U);
+    ahmed_body
+    {
+        type            noSlip;
+    }
 
-    turbulence      bounded Gauss upwind;
-    div(phi,k)      $turbulence;
-    div(phi,omega)  $turbulence;
+    roof
+    {
+        type            slip;
+    }
 
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
-}
+    farSide
+    {
+        type            slip;
+    }
 
-laplacianSchemes
-{
-    default         Gauss linear limited corrected 0.33;
-}
+    centerline
+    {
+        type            symmetry;
+    }
 
-interpolationSchemes
-{
-    default         linear;
-}
-
-snGradSchemes
-{
-    default         limited corrected 0.33;
-}
-
-wallDist
-{
-    method          meshWave;
 }
 
 
