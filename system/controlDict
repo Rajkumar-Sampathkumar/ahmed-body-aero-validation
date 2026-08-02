@@ -24,31 +24,23 @@ FoamFile
 application     simpleFoam;
 
 startFrom       startTime;
-
 startTime       0;
 
 stopAt          endTime;
-
-endTime         500;
+endTime         2000;
 
 deltaT          1;
 
 writeControl    timeStep;
-
 writeInterval   100;
 
-purgeWrite      0;
+purgeWrite      5;
 
-writeFormat     binary;
-
-writePrecision  6;
-
+writeFormat     ascii;
+writePrecision 8;
 writeCompression off;
-
 timeFormat      general;
-
 timePrecision   6;
-
 runTimeModifiable true;
 
 functions
